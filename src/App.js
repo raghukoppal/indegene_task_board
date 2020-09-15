@@ -8,6 +8,8 @@ import './App.css';
 
 const Container = styled.div`
   display: flex;
+  justifycontent: 'centre';
+  height: 100%;
 `;
 
 const App = () => {
@@ -26,16 +28,18 @@ const App = () => {
     ) {
       return;
     }
-    const start = data.taskSections[source.draggableId];
+    const start = data.taskSections[source.droppableId];
     const finish = data.taskSections[destination.droppableId];
 
     // Moving from one list to another
     const startTaskIds = Array.from(start.taskIds);
+    startTaskIds.splice(source.index, 1);
     const newStart = {
       ...start,
       taskIds: startTaskIds,
     };
     const finishTaskIds = Array.from(finish.taskIds);
+    finishTaskIds.splice(destination.index, 0, draggableId);
     const newFinish = {
       ...finish,
       taskIds: finishTaskIds,
@@ -49,24 +53,24 @@ const App = () => {
       },
     };
     setData(newState);
-    return;
+    //return;
   };
   return (
     <Container>
-      {data.sectionOrder.map((sectionId) => {
-        const section = data.taskSections[sectionId];
-        const tasks = section.taskIds.map((taskId) => data.tasks[taskId]);
-        return (
-          <DragDropContext onDragEnd={onDragEnd} key={sectionId}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        {data.sectionOrder.map((sectionId) => {
+          const section = data.taskSections[sectionId];
+          const tasks = section.taskIds.map((taskId) => data.tasks[taskId]);
+          return (
             <StateCol
               key={section.id}
               sectionId={section.id}
               section={section}
               tasks={tasks}
             />
-          </DragDropContext>
-        );
-      })}
+          );
+        })}
+      </DragDropContext>
     </Container>
   );
 };

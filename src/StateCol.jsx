@@ -7,17 +7,20 @@ const Container = styled.div`
   margin: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
-  width: 260px;
+  width: 220px;
   display: flex;
   flex-direction: column;
+  background-color: white;
 `;
 const Title = styled.h4`
   padding: 8px;
 `;
 const TaskList = styled.div`
-  padding: 8px;
-  flex-grow: 1;
-  min-height: 100px;
+padding: 8px;
+transition: background-color 0.2s ease;
+background-color: ${(props) => (props.isDraggingOver ? 'skyblue' : 'inherit')}
+flex-grow: 1;
+min-height: 100px;
 `;
 
 const StateCol = ({ sectionId, section, tasks }) => {
@@ -25,13 +28,13 @@ const StateCol = ({ sectionId, section, tasks }) => {
     <Container>
       <Title>{section.title}</Title>
       <Droppable droppableId={sectionId}>
-        {(provided) => (
+        {(provided, snapshot) => (
           <TaskList ref={provided.innerRef} {...provided.droppableProps}>
             {tasks.map((task, index) => (
               <Task
                 key={task.id}
-                index={index}
                 id={task.id}
+                index={index}
                 content={task.content}
                 openedBy={task.openedBy}
               />
